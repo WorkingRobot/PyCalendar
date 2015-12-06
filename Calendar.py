@@ -19,7 +19,7 @@ purple = (255 , 000 , 255)
 gray   = (128 , 128 , 128)
 
 #   CAPTION   #
-img = pygame.image.load('calendar.jpg')
+img = pygame.image.load('calendar.png')
 img.set_colorkey(white)
 pygame.display.set_icon(img)
 pygame.display.set_caption("Calendar")
