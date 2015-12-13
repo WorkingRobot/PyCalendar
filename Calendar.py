@@ -1,6 +1,7 @@
 import pygame
 from datetime import datetime
 import calendar
+from os import remove as rm
 
 pygame.init()
 
@@ -59,13 +60,43 @@ elif month == 1:
 text = prefix + ' ' + year
 del year, month, day, prefix
 
-'''                      SUN  MON   TUE  WED  THU  FRI  SAT              '''
+try:
+    appointment_file = open("appointments.txt",'r+')
+except:
+    fo = open("appointments.txt", "w")
+    file_before = ""
+    for x in range(37):
+        file_before += "\n"
+    fo.write(file_before)
+    fo.close()
+    del fo, file_before
+    appointment_file = open("appointments.txt",'r+')
+appointments = appointment_file.read().split('\n')
+
+daypointments = [[]]
+for i in appointments:
+    if i == "":
+        daypointments.append([])
+    else:
+        daypointments[-1].append(i)
+
+x=0
+appointments = [[]]
+for day in daypointments:
+    if x == 7:
+        x=0
+        appointments.append([])
+    else:
+        appointments[-1].append(day)
+        x+=1
+
+'''                      SUN  MON   TUE  WED  THU  FRI  SAT              
 appointments = [     [   [],[],[],[],[],[],[]   ],#WEEK 1
                      [   [],[],[],[],[],[],[]   ],#WEEK 2
                      [   [],[],[],[],[],[],[]   ],#WEEK 3
                      [   [],[],[],[],[],[],[]   ],#WEEK 4
                      [   [],[],[],[],[],[],[]   ] #WEEK 5
-]
+]'''
 
 # FUNCTIONS   #
 def typetext(font, size, text, x, y, alias, color, upside):
@@ -78,6 +109,8 @@ def padZero(num):
     if int(num) < 10:
         return '0' + str(num)
     return num
+def typein(text):
+    appointment_file.write(text)
 
 # Loop until the user clicks the close button.
 done = False
@@ -126,7 +159,6 @@ while not done:
                             else:
                                 print("No Appointments / Events set on this date.")
             del index
-
     pygame.draw.rect(screen,(0,200,0),[50,25,700,50])
     for y in range(len(days)):
         y = (y) * 75 + 125
@@ -137,7 +169,6 @@ while not done:
         pos = [(y) * 75 + 125,'']
         for x in range(7):
             pos[1] = (x) * 100 + 50
-            #print(pos)
             if appointments[y][x]:
                 pygame.draw.circle(screen,red,[pos[1]+10,pos[0]+60],3)
 #pygame.draw.rect(screen,black,[x,y,100,75],1)
@@ -166,3 +197,22 @@ while not done:
 
     # --- Limit to 60 frames per second
     clock.tick(100)
+appointment_file.truncate()
+print(appointments)
+appointment_file.close()
+rm("appointments.txt")
+fo = open("appointments.txt", "wb")
+for wk in appointments:
+    for day in wk:
+        for app in day:
+            print(app + '\n')
+            fo.write(app + '\n')
+        print('\n')
+        fo.write('\n')
+    print('\n')
+    fo.write('\n')
+print('\n')
+print('\n')
+fo.write('\n')
+fo.write('\n')
+fo.close()
