@@ -1,9 +1,10 @@
-import pygame
+import pygame, sys
 from datetime import datetime
 import calendar
 from os import remove as rm
 
 pygame.init()
+sys.path.append("Encryption")
 
 #   SCREEN SET   #
 screen_size=[800,550]
@@ -60,17 +61,25 @@ elif month == 1:
 text = prefix + ' ' + year
 del year, month, day, prefix
 
+
+
 try:
-    appointment_file = open("appointments.txt",'r+')
+    import decrypt
+    decrypt.main()
+    appointment_file = open("appointments.dat",'r+')
+    for y in range(len(days)):
+        for x in range(7):
+            x = appointments[y][x]
 except:
-    fo = open("appointments.txt", "w")
+    fo = open("appointments.dat", "w")
     file_before = ""
     for x in range(37):
         file_before += "\n"
     fo.write(file_before)
     fo.close()
     del fo, file_before
-    appointment_file = open("appointments.txt",'r+')
+    appointment_file = open("appointments.dat",'r+')
+    print("Handled Exception")
 appointments = appointment_file.read().split('\n')
 
 daypointments = [[]]
@@ -109,8 +118,6 @@ def padZero(num):
     if int(num) < 10:
         return '0' + str(num)
     return num
-def typein(text):
-    appointment_file.write(text)
 
 # Loop until the user clicks the close button.
 done = False
@@ -200,8 +207,8 @@ while not done:
 appointment_file.truncate()
 print(appointments)
 appointment_file.close()
-rm("appointments.txt")
-fo = open("appointments.txt", "wb")
+rm("appointments.dat")
+fo = open("appointments.dat", "w")
 for wk in appointments:
     for day in wk:
         for app in day:
@@ -216,3 +223,5 @@ print('\n')
 fo.write('\n')
 fo.write('\n')
 fo.close()
+import encrypt
+encrypt.main()
